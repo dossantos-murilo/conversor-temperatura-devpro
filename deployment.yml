@@ -1,0 +1,33 @@
+apiVersion: apps/v1 # kubectl api-resources | grep replicasets
+kind: Deployment
+metadata:
+  name: deployment-conversao-temperatura
+spec:
+  replicas: 10
+  selector:
+    matchLabels:
+      app: conversao-temperatura
+  template:
+    metadata: # Metadados do objeto.
+      labels:
+        app: conversao-temperatura
+    spec: # Especificações do objeto.
+      containers:
+      - name: conversao
+        image: dossantosmurilo/conversao-temperatura:v1
+        ports:
+        -  containerPort: 8080
+
+---
+apiVersion: v1
+kind: Service
+metadata: 
+  name: conversao
+spec:
+  selector:
+    app: conversao-temperatura
+  ports:
+    - port: 8080
+      protocol: TCP
+      nodePort: 30000
+  type: NodePort
